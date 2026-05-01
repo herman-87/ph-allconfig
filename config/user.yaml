@@ -1,2 +1,10 @@
 server:
-  port: "${SERVER_PORT:8084}"
+  port: "8084"
+
+spring:
+  application:
+    name: "user"
+  jpa:
+    hibernate:
+      ddl-auto: "validate"
+    show-sql: false

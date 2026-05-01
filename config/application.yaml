@@ -4,7 +4,7 @@ spring:
     username: "${DB_USERNAME}"
     password: "${DB_PASSWORD}"
     hikari:
-      maximum-pool-size: ${HIKARI_MAXIMUM_POOL_SIZE:9}
+      maximum-pool-size: "${HIKARI_MAXIMUM_POOL_SIZE:9}"
       connection-timeout: 60000
       initialization-fail-timeout: 60000
       minimum-idle: 3
@@ -19,3 +19,39 @@ spring:
     change-log: "classpath:db/changelog/master.xml"
     clear-check-sums: true
     enabled: true
+
+# Common Eureka config
+eureka:
+  client:
+    service-url:
+      defaultZone: "${EUREKA_URL}"
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+
+# Common security config
+security:
+  cors:
+    allowed-origins: "*"
+    allowed-methods: "GET,POST,PUT,DELETE,OPTIONS,PATCH"
+    allowed-headers: "*"
+    allow-credentials: false
+    max-age: 3600
+
+# Common logging/tracing
+management:
+  zipkin:
+    tracing:
+      endpoint: "${ZIPKIN_ENDPOINT}"
+  tracing:
+    sampling:
+      probability: 1.0
+
+logging:
+  level:
+    root: "INFO"
+    org.springframework.web: "DEBUG"
+    org.springframework.web.client: "DEBUG"
+    org.springframework.http.client: "DEBUG"
+    org.springframework.security: "DEBUG"

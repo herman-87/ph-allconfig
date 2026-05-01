@@ -1,0 +1,21 @@
+server:
+  port: "8081"
+
+spring:
+  application:
+    name: "configserver"
+  cloud:
+    config:
+      server:
+        git:
+          uri: "https://github.com/herman-87/ph-allconfig.git"
+          default-label: "master"
+          search-paths:
+            - "config"
+          clone-on-start: true
+          basedir: "/app/config-repo"
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false

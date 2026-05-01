@@ -1,0 +1,113 @@
+version: '3.8'
+
+services:
+  configserver:
+    image: herman87/ph_configserver:latest
+    container_name: ph-configserver
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - GIT_URI=https://github.com/herman-87/ph-allconfig.git
+      - CONFIG_REPO_PATH=/app/config-repo
+    networks:
+      - ph-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  discovery:
+    image: herman87/ph_discovery:latest
+    container_name: ph-discovery
+    ports:
+      - "8082:80"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8081
+    depends_on:
+      configserver:
+        condition: service_healthy
+    networks:
+      - ph-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  gateway:
+    image: herman87/ph_gateway:latest
+    container_name: ph-gateway
+    ports:
+      - "8083:80"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8081
+    depends_on:
+      discovery:
+        condition: service_healthy
+    networks:
+      - ph-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  user:
+    image: herman87/ph_user:latest
+    container_name: ph-user
+    ports:
+      - "8084:8084"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8081
+      - DATABASE_URL=jdbc:postgresql://postgres:5432/userdb
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PASSWORD=postgres
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=postgres
+    depends_on:
+      discovery:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    networks:
+      - ph-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8084/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: ph-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=userdb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - ph-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  ph-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
