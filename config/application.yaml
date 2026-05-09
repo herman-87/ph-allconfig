@@ -24,7 +24,7 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: "${EUREKA_URL}"
+      defaultZone: "${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}"
     register-with-eureka: true
     fetch-registry: true
   instance:

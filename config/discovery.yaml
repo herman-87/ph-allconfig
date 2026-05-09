@@ -7,12 +7,12 @@ spring:
 
 eureka:
   instance:
-    hostname: discovery
+    hostname: "${EUREKA_INSTANCE_HOSTNAME:discovery}"
   client:
     register-with-eureka: false
     fetch-registry: false
     service-url:
-      defaultZone: http://discovery:8082/eureka/
+      defaultZone: "${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}"
   server:
     enable-self-preservation: false
     eviction-interval-timer-in-ms: 10000

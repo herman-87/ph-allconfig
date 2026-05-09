@@ -37,7 +37,6 @@ services:
       - SPRING_APPLICATION_NAME=discovery
       - SERVER_PORT=8082
       - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8081
-      - EUREKA_URL=http://discovery:8082/eureka/
       - EUREKA_INSTANCE_HOSTNAME=discovery
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery:8082/eureka/
       - EUREKA_CLIENT_REGISTER-WITH-EUREKA=false
@@ -86,7 +85,7 @@ services:
       - SPRING_APPLICATION_NAME=gateway
       - SERVER_PORT=8083
       - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8081
-      - EUREKA_URL=http://discovery:8082/eureka/
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery:8082/eureka/
       - ZIPKIN_ENDPOINT=http://zipkin:9411/api/v2/spans
     depends_on:
       discovery:
@@ -117,7 +116,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/userdb
       - DB_USERNAME=postgres
       - DB_PASSWORD=postgres
-      - EUREKA_URL=http://discovery:8082/eureka/
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery:8082/eureka/
       - ZIPKIN_ENDPOINT=http://zipkin:9411/api/v2/spans
     depends_on:
       configserver:
