@@ -19,13 +19,13 @@ services:
     networks:
       - ph-network
     healthcheck:
-      test: sh -c 'wget -q --spider http://localhost:8081/actuator/health || exit 1'
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 60s
+      test: sh -c 'wget -q --spider http://localhost:8081/actuator/health/readiness || exit 1'
+      interval: 10s
+      timeout: 5s
+      retries: 18
+      start_period: 30s
 
-  # Discovery Server (Eureka) - Registre de services
+  # Discovery Server
   discovery:
     image: herman87/ph_discovery:latest
     container_name: ph-discovery
@@ -38,6 +38,10 @@ services:
       - SERVER_PORT=8082
       - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8081
       - EUREKA_URL=http://discovery:8082/eureka/
+      - EUREKA_INSTANCE_HOSTNAME=discovery
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery:8082/eureka/
+      - EUREKA_CLIENT_REGISTER-WITH-EUREKA=false
+      - EUREKA_CLIENT_FETCH-REGISTRY=false
       - ZIPKIN_ENDPOINT=http://zipkin:9411/api/v2/spans
     depends_on:
       configserver:
