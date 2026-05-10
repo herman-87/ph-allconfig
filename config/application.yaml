@@ -1,35 +1,3 @@
-spring:
-  datasource:
-    driver-class-name: "org.postgresql.Driver"
-    username: "${DB_USERNAME}"
-    password: "${DB_PASSWORD}"
-    hikari:
-      maximum-pool-size: "${HIKARI_MAXIMUM_POOL_SIZE:9}"
-      connection-timeout: 60000
-      initialization-fail-timeout: 60000
-      minimum-idle: 3
-      connection-test-query: "SELECT 1"
-  jpa:
-    hibernate:
-      ddl-auto: "${JPA_HIBERNATE_DDL_AUTO:validate}"
-    properties:
-      hibernate:
-        dialect: "org.hibernate.dialect.PostgreSQLDialect"
-  liquibase:
-    change-log: "classpath:db/changelog/master.xml"
-    clear-check-sums: true
-    enabled: true
-
-# Common Eureka config
-eureka:
-  client:
-    service-url:
-      defaultZone: "${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}"
-    register-with-eureka: true
-    fetch-registry: true
-  instance:
-    prefer-ip-address: true
-
 # Common security config
 security:
   cors:
@@ -43,15 +11,16 @@ security:
 management:
   zipkin:
     tracing:
-      endpoint: "${ZIPKIN_ENDPOINT}"
+      endpoint: ${ZIPKIN_ENDPOINT}
   tracing:
     sampling:
       probability: 1.0
 
 logging:
   level:
-    root: "INFO"
-    org.springframework.web: "DEBUG"
-    org.springframework.web.client: "DEBUG"
-    org.springframework.http.client: "DEBUG"
-    org.springframework.security: "DEBUG"
+    root: INFO
+    com.h87: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.web.client: DEBUG
+    org.springframework.http.client: DEBUG
+    org.springframework.security: DEBUG
