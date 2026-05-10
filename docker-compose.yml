@@ -26,133 +26,133 @@ services:
       start_period: 160s
 
   # Discovery Server
-  discovery:
-    image: herman87/ph_discovery:latest
-    container_name: ph-discovery
-    ports:
-      - "8761:8761"
-    restart: always
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_APPLICATION_NAME=discovery
-      - SERVER_PORT=8761
-      - SPRING_CONFIG_IMPORT=
-      - EUREKA_INSTANCE_HOSTNAME=discovery
-      - ZIPKIN_ENDPOINT=http://zipkin:9411/api/v2/spans
-    depends_on:
-      configserver:
-        condition: service_healthy
-    networks:
-      - ph_network
-    healthcheck:
-      test: sh -c 'wget -q --spider http://localhost:8761/actuator/health || exit 1'
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 60s
+#  discovery:
+#    image: herman87/ph_discovery:latest
+#    container_name: ph-discovery
+#    ports:
+#      - "8761:8761"
+#    restart: always
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=docker
+#      - SPRING_APPLICATION_NAME=discovery
+#      - SERVER_PORT=8761
+#      - SPRING_CONFIG_IMPORT=
+#      - EUREKA_INSTANCE_HOSTNAME=discovery
+#      - ZIPKIN_ENDPOINT=http://zipkin:9411/api/v2/spans
+#    depends_on:
+#      configserver:
+#        condition: service_healthy
+#    networks:
+#      - ph_network
+#    healthcheck:
+#      test: sh -c 'wget -q --spider http://localhost:8761/actuator/health || exit 1'
+#      interval: 30s
+#      timeout: 10s
+#      retries: 5
+#      start_period: 60s
 
-  # Zipkin - Système de traçage distribué
+    # Zipkin
   zipkin:
     image: openzipkin/zipkin:latest
-    container_name: ph-zipkin
+    container_name: zipkin
     ports:
       - "9411:9411"
+    networks:
+      - microservices_network
     restart: always
     environment:
       - SELF_TRACING_ENABLED=false
       - SELF_TRACING_FLUSH_INTERVAL=0
-    networks:
-      - ph_network
     healthcheck:
-      test: sh -c 'wget -q --spider http://localhost:9411/actuator/health || exit 1'
+      test: wget -q --spider http://localhost:9411/actuator/health || exit 1
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 30s
 
   # API Gateway - Point d'entrée unique
-  gateway:
-    image: herman87/ph_gateway:latest
-    container_name: ph-gateway
-    ports:
-      - "8083:8083"
-    restart: always
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_APPLICATION_NAME=gateway
-      - SERVER_PORT=8083
-      - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8081
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery:8761/eureka/
-      - ZIPKIN_ENDPOINT=http://zipkin:9411/api/v2/spans
-    depends_on:
-      discovery:
-        condition: service_healthy
-      zipkin:
-        condition: service_healthy
-    networks:
-      - ph_network
-    healthcheck:
-      test: sh -c 'wget -q --spider http://localhost:8083/actuator/health || exit 1'
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 60s
+#  gateway:
+#    image: herman87/ph_gateway:latest
+#    container_name: ph-gateway
+#    ports:
+#      - "8083:8083"
+#    restart: always
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=docker
+#      - SPRING_APPLICATION_NAME=gateway
+#      - SERVER_PORT=8083
+#      - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8081
+#      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery:8761/eureka/
+#      - ZIPKIN_ENDPOINT=http://zipkin:9411/api/v2/spans
+#    depends_on:
+#      discovery:
+#        condition: service_healthy
+#      zipkin:
+#        condition: service_healthy
+#    networks:
+#      - ph_network
+#    healthcheck:
+#      test: sh -c 'wget -q --spider http://localhost:8083/actuator/health || exit 1'
+#      interval: 30s
+#      timeout: 10s
+#      retries: 5
+#      start_period: 60s
 
   # User Service - Microservice utilisateur
-  user:
-    image: herman87/ph_user:latest
-    container_name: ph-user
-    ports:
-      - "8084:8084"
-    restart: always
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_APPLICATION_NAME=user
-      - SERVER_PORT=8084
-      - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8081
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/userdb
-      - DB_USERNAME=postgres
-      - DB_PASSWORD=postgres
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery:8761/eureka/
-      - ZIPKIN_ENDPOINT=http://zipkin:9411/api/v2/spans
-    depends_on:
-      configserver:
-        condition: service_healthy
-      discovery:
-        condition: service_healthy
-      postgres:
-        condition: service_healthy
-      zipkin:
-        condition: service_healthy
-    networks:
-      - ph_network
-    healthcheck:
-      test: sh -c 'wget -q --spider http://localhost:8084/actuator/health || exit 1'
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 60s
+#  user:
+#    image: herman87/ph_user:latest
+#    container_name: ph-user
+#    ports:
+#      - "8084:8084"
+#    restart: always
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=docker
+#      - SPRING_APPLICATION_NAME=user
+#      - SERVER_PORT=8084
+#      - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8081
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/userdb
+#      - DB_USERNAME=postgres
+#      - DB_PASSWORD=postgres
+#      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery:8761/eureka/
+#      - ZIPKIN_ENDPOINT=http://zipkin:9411/api/v2/spans
+#    depends_on:
+#      configserver:
+#        condition: service_healthy
+#      discovery:
+#        condition: service_healthy
+#      postgres:
+#        condition: service_healthy
+#      zipkin:
+#        condition: service_healthy
+#    networks:
+#      - ph_network
+#    healthcheck:
+#      test: sh -c 'wget -q --spider http://localhost:8084/actuator/health || exit 1'
+#      interval: 30s
+#      timeout: 10s
+#      retries: 5
+#      start_period: 60s
 
   # PostgreSQL - Base de données
-  postgres:
-    image: postgres:17-alpine
-    container_name: ph-postgres
-    ports:
-      - "5432:5432"
-    restart: always
-    environment:
-      - POSTGRES_DB=userdb
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-    networks:
-      - ph_network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+#  postgres:
+#    image: postgres:17-alpine
+#    container_name: ph-postgres
+#    ports:
+#      - "5432:5432"
+#    restart: always
+#    environment:
+#      - POSTGRES_DB=userdb
+#      - POSTGRES_USER=postgres
+#      - POSTGRES_PASSWORD=postgres
+#    volumes:
+#      - postgres-data:/var/lib/postgresql/data
+#    networks:
+#      - ph_network
+#    healthcheck:
+#      test: ["CMD-SHELL", "pg_isready -U postgres"]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 5
 
 networks:
   ph_network:
