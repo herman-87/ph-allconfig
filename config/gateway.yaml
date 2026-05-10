@@ -1,6 +1,7 @@
 spring:
   application:
     name: "${SPRING_APPLICATION_NAME:gateway}"
+
   cloud:
     gateway:
       httpclient:
@@ -19,10 +20,12 @@ spring:
               - OPTIONS
             allowed-headers: "*"
             allow-credentials: false
+
       discovery:
         locator:
           enabled: true
           lower-case-service-id: true
+
       routes:
         - id: user
           uri: lb://user
@@ -33,15 +36,6 @@ spring:
 
 server:
   port: "${SERVER_PORT:8083}"
-
-eureka:
-  client:
-    service-url:
-      defaultZone: "${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://discovery:8761/eureka/}"
-    register-with-eureka: true
-    fetch-registry: true
-  instance:
-    prefer-ip-address: true
 
 logging:
   level:
@@ -58,9 +52,3 @@ management:
   endpoint:
     gateway:
       enabled: true
-  zipkin:
-    tracing:
-      endpoint: "${ZIPKIN_ENDPOINT}"
-  tracing:
-    sampling:
-      probability: 1.0
