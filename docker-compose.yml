@@ -67,33 +67,35 @@ services:
       retries: 3
       start_period: 30s
 
-  # API Gateway - Point d'entrée unique
-#  gateway:
-#    image: herman87/ph_gateway:latest
-#    container_name: ph-gateway
-#    ports:
-#      - "8083:8083"
-#    restart: always
-#    environment:
-#      - SPRING_PROFILES_ACTIVE=docker
-#      - SPRING_APPLICATION_NAME=gateway
-#      - SERVER_PORT=8083
-#      - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8081
-#      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery:8761/eureka/
-#      - ZIPKIN_ENDPOINT=http://zipkin:9411/api/v2/spans
-#    depends_on:
-#      discovery:
-#        condition: service_healthy
-#      zipkin:
-#        condition: service_healthy
-#    networks:
-#      - ph_network
-#    healthcheck:
-#      test: sh -c 'wget -q --spider http://localhost:8083/actuator/health || exit 1'
-#      interval: 30s
-#      timeout: 10s
-#      retries: 5
-#      start_period: 60s
+  # Gateway Service
+  gateway:
+    image: herman87/ph_gateway:latest
+    container_name: gateway
+    ports:
+      - "8083:8083"
+    networks:
+      - ph_network
+    restart: always
+    environment:
+      - SPRING_APPLICATION_NAME=gateway
+      - SERVER_PORT=8083
+      - SPRING_PROFILES_ACTIVE=native
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8081
+      - EUREKA_URL=http://discovery-server:8761/eureka/
+      - ZIPKIN_ENDPOINT=http://zipkin:9411/api/v2/spans
+    depends_on:
+      discovery_server:
+        condition: service_healthy
+      config_server:
+        condition: service_healthy
+      zipkin:
+        condition: service_healthy
+    healthcheck:
+      test: sh -c 'wget -q --spider http://localhost:8083/actuator/health || exit 1'
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 90s
 
   # User Service - Microservice utilisateur
 #  user:
