@@ -80,8 +80,8 @@ services:
       - SPRING_APPLICATION_NAME=gateway
       - SERVER_PORT=8083
       - SPRING_PROFILES_ACTIVE=native
-      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8081
-      - EUREKA_URL=http://discovery-server:8761/eureka/
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config_server:8081
+      - EUREKA_URL=http://discovery_server:8761/eureka/
       - ZIPKIN_ENDPOINT=http://zipkin:9411/api/v2/spans
     depends_on:
       discovery_server:
@@ -108,16 +108,16 @@ services:
 #      - SPRING_PROFILES_ACTIVE=docker
 #      - SPRING_APPLICATION_NAME=user
 #      - SERVER_PORT=8084
-#      - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8081
+#      - SPRING_CONFIG_IMPORT=optional:configserver:http://config_server:8081
 #      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/userdb
 #      - DB_USERNAME=postgres
 #      - DB_PASSWORD=postgres
-#      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery:8761/eureka/
+#      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery_server:8761/eureka/
 #      - ZIPKIN_ENDPOINT=http://zipkin:9411/api/v2/spans
 #    depends_on:
-#      configserver:
+#      config_server:
 #        condition: service_healthy
-#      discovery:
+#      discovery_server:
 #        condition: service_healthy
 #      postgres:
 #        condition: service_healthy
