@@ -26,7 +26,7 @@ services:
       start_period: 160s
 
   # Discovery Server
-  discovery-server:
+  discovery_server:
     image: herman87/ph_discovery:latest
     container_name: discovery-server
     ports:
@@ -35,7 +35,7 @@ services:
       - ph_network
     restart: always
     depends_on:
-      config-server:
+      config_server:
         condition: service_healthy
     environment:
       - SPRING_APPLICATION_NAME=discovery
