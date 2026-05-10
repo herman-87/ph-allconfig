@@ -1,29 +1,29 @@
 services:
-  # Config Server - Fournit la configuration centralisée aux autres services
-  configserver:
-    image: herman87/ph_configserver:latest
+
+  # Config Server
+  config-server:
+    image: "herman87/ph_configserver:latest"
     container_name: ph-configserver
     ports:
       - "8081:8081"
+    networks:
+      - ph_network
     restart: always
     environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_APPLICATION_NAME=configserver
+      - HOME=/tmp
+      - SPRING_CLOUD_CONFIG_SERVER_GIT_BASEDIR=/tmp/config-repo
+      - SPRING_APPLICATION_NAME=config-server
       - SERVER_PORT=8081
-      - SPRING_CLOUD_CONFIG_SERVER_GIT_URI=https://github.com/herman-87/ph-allconfig.git
-      - SPRING_CLOUD_CONFIG_SERVER_GIT_DEFAULT_LABEL=master
-      - SPRING_CLOUD_CONFIG_SERVER_GIT_SEARCH_PATHS=config
-      - SPRING_CLOUD_CONFIG_SERVER_GIT_CLONE_ON_START=true
-      - SPRING_CLOUD_CONFIG_SERVER_GIT_BASEDIR=/app/config-repo
-      - ZIPKIN_ENDPOINT=http://zipkin:9411/api/v2/spans
-    networks:
-      - ph-network
+      - SPRING_PROFILES_ACTIVE=git
+      - MANAGEMENT_TRACING_ENABLED=false
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=
+      - SPRING_ZIPKIN_ENABLED=false
     healthcheck:
-      test: sh -c 'wget -q --spider http://localhost:8081/actuator/health/readiness || exit 1'
-      interval: 10s
-      timeout: 5s
-      retries: 18
-      start_period: 30s
+      test: sh -c 'wget -q --spider http://localhost:8081/actuator/health || exit 1'
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 160s
 
   # Discovery Server
   discovery:
@@ -43,7 +43,7 @@ services:
       configserver:
         condition: service_healthy
     networks:
-      - ph-network
+      - ph_network
     healthcheck:
       test: sh -c 'wget -q --spider http://localhost:8761/actuator/health || exit 1'
       interval: 30s
@@ -62,7 +62,7 @@ services:
       - SELF_TRACING_ENABLED=false
       - SELF_TRACING_FLUSH_INTERVAL=0
     networks:
-      - ph-network
+      - ph_network
     healthcheck:
       test: sh -c 'wget -q --spider http://localhost:9411/actuator/health || exit 1'
       interval: 30s
@@ -90,7 +90,7 @@ services:
       zipkin:
         condition: service_healthy
     networks:
-      - ph-network
+      - ph_network
     healthcheck:
       test: sh -c 'wget -q --spider http://localhost:8083/actuator/health || exit 1'
       interval: 30s
@@ -125,7 +125,7 @@ services:
       zipkin:
         condition: service_healthy
     networks:
-      - ph-network
+      - ph_network
     healthcheck:
       test: sh -c 'wget -q --spider http://localhost:8084/actuator/health || exit 1'
       interval: 30s
@@ -147,7 +147,7 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
     networks:
-      - ph-network
+      - ph_network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -155,7 +155,7 @@ services:
       retries: 5
 
 networks:
-  ph-network:
+  ph_network:
     driver: bridge
 
 volumes:
