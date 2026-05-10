@@ -1,7 +1,7 @@
 services:
 
   # Config Server
-  config-server:
+  config_server:
     image: "herman87/ph_configserver:latest"
     container_name: ph-configserver
     ports:
@@ -58,7 +58,7 @@ services:
     ports:
       - "9411:9411"
     networks:
-      - microservices_network
+      - ph_network
     restart: always
     environment:
       - SELF_TRACING_ENABLED=false
