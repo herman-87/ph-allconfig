@@ -2,27 +2,10 @@ spring:
   application:
     name: "${SPRING_APPLICATION_NAME:discovery}"
 
-server:
-  port: "${SERVER_PORT:8081}"
-
 eureka:
   client:
     register-with-eureka: false
     fetch-registry: false
-  server:
-    enable-self-preservation: false
-    eviction-interval-timer-in-ms: 5000
-  instance:
-    hostname: localhost
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info
-  zipkin:
-    tracing:
-      endpoint: ""   # désactivé pour discovery
-  tracing:
-    sampling:
-      probability: 0.0
+server:
+  port: "${SERVER_PORT:8082}"
