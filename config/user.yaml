@@ -41,8 +41,8 @@ app:
     frontend-login-url: "${FRONTEND_LOGIN_URL:http://localhost:9000/hello}"
   jwt:
     rsa:
-      private-key-path: "${JWT_PRIVATE_KEY_PATH:/app/keys/private.pem}"
-      public-key-path: "${JWT_PUBLIC_KEY_PATH:/app/keys/public.pem}"
+      private-key-path: "${JWT_PRIVATE_KEY_PATH:private.pem}"
+      public-key-path: "${JWT_PUBLIC_KEY_PATH:public.pem}"
 
 management:
   endpoints:
