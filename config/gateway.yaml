@@ -19,12 +19,10 @@ spring:
               - OPTIONS
             allowed-headers: "*"
             allow-credentials: false
-
       discovery:
         locator:
           enabled: true
           lower-case-service-id: true
-
       routes:
         - id: user
           uri: lb://user
@@ -47,10 +45,10 @@ server:
 
 logging:
   level:
-    org.springframework.cloud.gateway: DEBUG
-    org.springframework.web: DEBUG
-    reactor.netty: DEBUG
-    org.springframework.cloud.gateway.handler.RoutePredicateHandlerMapping: TRACE
+    com.ph.gateway: INFO
+    org.springframework.cloud.gateway: INFO
+    org.springframework.web: INFO
+    reactor.netty: INFO
 
 management:
   endpoints:
