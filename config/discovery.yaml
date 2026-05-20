@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: "${SPRING_APPLICATION_NAME:discovery}"
+
+server:
+  port: ${SERVER_PORT:8761}
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: http://localhost:${SERVER_PORT:8761}/eureka/
+
+  instance:
+    hostname: localhost
