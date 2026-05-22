@@ -24,7 +24,7 @@ spring:
           time_zone: UTC
         format_sql: true
   liquibase:
-    change-log: "classpath:db/changelog/db.changelog-master.xml"
+    change-log: "classpath:db/changelog/master.xml"
     clear-checksums: true
     enabled: true
   security:
