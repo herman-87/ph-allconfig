@@ -60,8 +60,6 @@ app:
   security:
     issuer: ${APP_SECURITY_ISSUER:http://localhost:8084}
     frontend-login-url: ${APP_FRONTEND_LOGIN_URL:http://localhost:9000/hello}
-    allowed-origins:
-      - ${APP_CORS_ORIGIN:http://localhost:3000}
   jwt:
     issuer: ${APP_SECURITY_ISSUER:http://localhost:8084}
     access-token-ttl: ${JWT_ACCESS_TOKEN_TTL:PT15M}
