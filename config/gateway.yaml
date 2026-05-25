@@ -23,12 +23,18 @@ spring:
         locator:
           enabled: false
       routes:
-        - id: user
-          uri: lb://user
-          predicates:
-            - Path=/user/**
-          filters:
-            - RewritePath=/user/(?<segment>.*), /${segment}
+         - id: user
+           uri: lb://user
+           predicates:
+             - Path=/user/**
+           filters:
+             - RewritePath=/user/(?<segment>.*), /${segment}
+         - id: pharmafind
+           uri: lb://pharmafind
+           predicates:
+             - Path=/pharmafind/**
+           filters:
+             - RewritePath=/pharmafind/(?<segment>.*), /${segment}
 
 eureka:
   client:
