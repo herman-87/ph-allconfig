@@ -58,15 +58,10 @@ eureka:
 
 app:
   security:
-    issuer: ${APP_SECURITY_ISSUER:http://localhost:9000}
+    issuer: ${APP_SECURITY_ISSUER:http://user:9000}
     frontend-login-url: ${APP_FRONTEND_LOGIN_URL:http://localhost:3000/login}
   jwt:
-    issuer: ${APP_SECURITY_ISSUER:http://localhost:9000}
-    access-token-ttl: ${JWT_ACCESS_TOKEN_TTL:PT15M}
-    refresh-token-ttl: ${JWT_REFRESH_TOKEN_TTL:P14D}
-    rsa:
-      private-key-path: ${JWT_PRIVATE_KEY_PATH:private.pem}
-      public-key-path: ${JWT_PUBLIC_KEY_PATH:public.pem}
+    jwk-set-uri: ${JWT_JWK_SET_URI:http://user:9000/.well-known/jwks.json}
 
 management:
   endpoints:
