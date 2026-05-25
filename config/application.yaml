@@ -1,3 +1,8 @@
+# Common Jackson config — exclude null fields from JSON
+spring:
+  jackson:
+    default-property-inclusion: non_null
+
 # Common security config
 security:
   cors:
