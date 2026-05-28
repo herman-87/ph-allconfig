@@ -35,6 +35,18 @@ spring:
              - Path=/pharmafind/**
            filters:
              - RewritePath=/pharmafind/(?<segment>.*), /${segment}
+         - id: image
+           uri: lb://image
+           predicates:
+             - Path=/image/**
+           filters:
+             - RewritePath=/image/(?<segment>.*), /${segment}
+         - id: backoffice
+           uri: lb://backoffice
+           predicates:
+             - Path=/backoffice/**
+           filters:
+             - RewritePath=/backoffice/(?<segment>.*), /${segment}
 
 eureka:
   client:
