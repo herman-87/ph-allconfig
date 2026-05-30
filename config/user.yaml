@@ -61,6 +61,8 @@ app:
     issuer: ${APP_SECURITY_ISSUER:http://localhost:8084}
     access-token-ttl: ${JWT_ACCESS_TOKEN_TTL:PT15M}
     refresh-token-ttl: ${JWT_REFRESH_TOKEN_TTL:P14D}
+  cookie:
+    secure: ${APP_COOKIE_SECURE:true}
   login:
     redirect:
       patient-url: ${APP_LOGIN_REDIRECT_PATIENT_URL:http://localhost:3000/patients/dashboard}
