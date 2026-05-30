@@ -1,0 +1,92 @@
+spring:
+  application:
+    name: "${SPRING_APPLICATION_NAME:backoffice}"
+  datasource:
+    driver-class-name: "org.postgresql.Driver"
+    url: "${DB_URL}"
+    username: "${DB_USERNAME}"
+    password: "${DB_PASSWORD}"
+    hikari:
+      maximum-pool-size: "${HIKARI_MAXIMUM_POOL_SIZE:9}"
+      connection-timeout: 60000
+      initialization-fail-timeout: 60000
+      minimum-idle: 3
+      connection-test-query: "SELECT 1"
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: "${JPA_HIBERNATE_DDL_AUTO:validate}"
+      show-sql: false
+    properties:
+      hibernate:
+        dialect: "org.hibernate.dialect.PostgreSQLDialect"
+        jdbc:
+          time_zone: UTC
+        format_sql: true
+  liquibase:
+    change-log: "classpath:db/changelog/master.xml"
+    clear-checksums: true
+    enabled: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID:replace-me}
+            client-secret: ${GOOGLE_CLIENT_SECRET:replace-me}
+            scope:
+              - openid
+              - profile
+              - email
+            redirect-uri: ${GOOGLE_REDIRECT_URI:{baseUrl}/login/oauth2/code/{registrationId}}
+        provider:
+          google:
+            issuer-uri: https://accounts.google.com
+  cloud:
+    function:
+      definition: certificationRequestCreatedConsumer
+    stream:
+      bindings:
+        certificationRequestCreatedConsumer-in-0:
+          destination: ${KAFKA_CERTIFICATION_REQUEST_TOPIC:certification-request-created}
+          content-type: application/json
+          group: backoffice
+      kafka:
+        binder:
+          brokers: ${KAFKA_BOOTSTRAP_SERVERS:ph-kafka:9092}
+
+server:
+  port: "${SERVER_PORT:9003}"
+  forward-headers-strategy: framework
+
+eureka:
+  client:
+    service-url:
+      defaultZone: "${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://ph-discovery-server:8761/eureka/}"
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+
+app:
+  security:
+    issuer: ${APP_SECURITY_ISSUER:http://user:9000}
+  jwt:
+    jwk-set-uri: ${JWT_JWK_SET_URI:http://user:9000/.well-known/jwks.json}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  zipkin:
+    tracing:
+      endpoint: "${ZIPKIN_ENDPOINT}"
+  tracing:
+    sampling:
+      probability: 1.0
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    com.ph.backoffice: DEBUG
