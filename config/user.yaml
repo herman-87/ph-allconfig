@@ -57,13 +57,16 @@ eureka:
     prefer-ip-address: true
 
 app:
-  security:
-    issuer: ${APP_SECURITY_ISSUER:http://localhost:8084}
-    frontend-login-url: ${APP_FRONTEND_LOGIN_URL:http://localhost:9000/hello}
   jwt:
     issuer: ${APP_SECURITY_ISSUER:http://localhost:8084}
     access-token-ttl: ${JWT_ACCESS_TOKEN_TTL:PT15M}
     refresh-token-ttl: ${JWT_REFRESH_TOKEN_TTL:P14D}
+  login:
+    redirect:
+      patient-url: ${APP_LOGIN_REDIRECT_PATIENT_URL:http://localhost:3000/patients/dashboard}
+      pharmacist-url: ${APP_LOGIN_REDIRECT_PHARMACIST_URL:http://localhost:3000/pharmacist/dashboard}
+      backoffice-url: ${APP_LOGIN_REDIRECT_BACKOFFICE_URL:http://localhost:3000/backoffice/dashboard}
+      default-url: ${APP_LOGIN_REDIRECT_DEFAULT_URL:http://localhost:3000/login}
 
 management:
   endpoints:
