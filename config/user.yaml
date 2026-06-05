@@ -63,6 +63,9 @@ app:
     refresh-token-ttl: ${JWT_REFRESH_TOKEN_TTL:P14D}
   cookie:
     secure: ${APP_COOKIE_SECURE:true}
+    domain: ${APP_COOKIE_DOMAIN:localhost}
+    same-site: ${APP_COOKIE_SAME_SITE:Lax}
+    path: ${APP_COOKIE_PATH:/}
   login:
     redirect:
       patient-url: ${APP_LOGIN_REDIRECT_PATIENT_URL:http://localhost:3000/patients/dashboard}
